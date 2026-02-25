@@ -1,0 +1,33 @@
+name: LBG GitHubActions Practice1
+
+on: 
+ workflow_dispatch: 
+
+
+jobs:
+ ci-build:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Code Checkout
+      uses: actions/checkout@v6.0.2
+    - name: SetUp Java
+      uses: actions/setup-java@v5.2.0
+      with:
+       java-version: 17
+       distribution: microsoft
+    - name: Maven Build
+      run: |
+       mvn clean install 
+       mkdir staging && cp target/*.jar staging
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v6.0.0  
+      with:
+       name: Packaging
+       path: staging
+ test:
+  needs: ci-build
+  runs-on: ubuntu-latest
+  steps:
+    - name: Print
+      run:  echo 'test'
+       
